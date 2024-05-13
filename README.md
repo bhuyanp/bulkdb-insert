@@ -1,6 +1,43 @@
-# Benchmaring of DB Bulk Insert Performance
+# Benchmarking of Bulk DB Insert Performance
+This project gives performace benchmarking of insert performance between MySQL and MongoDB. Sample size is 3k user records
+with first name, last name and email. No custom connection pool or threadpool used for this test. CompletableFuture uses ForkJoinThreadPool internally which was 
+used in this case for parallism. 
+
+### Getting Started
+
+#### Running Mongo and MySQL
+<code>
+docker compose up -d
+</code>
 
 
+#### Running The Application
+<code>
+mvn clean install
+</code>
+
+#### Sample Feed File
+[MOCK_DATA.csv](src%2Fmain%2Fresources%2FMOCK_DATA.csv)
+
+#### Upload Users
+<code>
+curl -F files=@src/main/resources/MOCK_DATA.csv  http://localhost:8080/user
+</code>
+
+You may upload the file multiple times to put more load on the application.
+
+<code>
+curl -F files=@src/main/resources/MOCK_DATA.csv -F files=@src/main/resources/MOCK_DATA.csv -F files=@src/main/resources/MOCK_DATA.csv http://localhost:8080/user
+</code>
+
+#### Changing Upload Mode
+[application.yaml](src%2Fmain%2Fresources%2Fapplication.yaml)<br/><br/>
+<code>
+##chose from bulk,single, singleparallel
+bulkupload:
+  insert:
+    mode: bulk
+</code>
 
 ### MySQL
 
@@ -46,3 +83,11 @@ Time taken(secs): 0.483999768<br/>
 Time taken(secs): 0.359407201<br/>
 Time taken(secs): 0.331147394<br/>
 Time taken(secs): 0.372126806<br/>
+
+### Conclusion
+For MySQL, the best performance comes from bulk insert with saveAll. However there may be cases
+where we need to insert one by one along with insert into related tables and transaction management. In those cases MySQL performance drop significantlly
+if we insert using single thread. Using CompletableFuture improves the performance of single records entry drastically but still behind bulk insert.
+
+MongoDB has far better insert performance over MySQL. All benchmark tests produced far better result than MySQL. Interestingly enough, single record entry in a loop
+using single thread also performed relatively well as compared to MySQL where we saw huge spike. 

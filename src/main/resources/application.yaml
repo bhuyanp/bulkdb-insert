@@ -23,3 +23,7 @@ spring:
 #        hikari: TRACE
 #        HikariConfig: DEBUG
 
+##chose from bulk,single, singleparallel
+bulkupload:
+  insert:
+    mode: bulk

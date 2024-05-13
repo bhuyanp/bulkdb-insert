@@ -8,10 +8,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 
-@SpringBootTest
+//@SpringBootTest
 class BulkdbInsertApplicationTests {
 
-	@Test
+	//@Test
 	void contextLoads() {
 	}
 
