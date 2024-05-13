@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: bulkdb-insert
+  jpa:
+#    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    url: jdbc:mysql://localhost:3306/test
+    username: root
+    password: password
+#    hikari:
+#      register-beans: true
+#      minimumIdle: 2
+#      maximumPoolSize: 21
+#      max-lifetime: 600000
+
+
+#logging:
+#  level:
+#    com:
+#      zaxxer:
+#        hikari: TRACE
+#        HikariConfig: DEBUG
+

@@ -1,0 +1,43 @@
+version: '3.3'
+
+services:
+
+
+  ## MySQL Docker Compose Config for Customer services
+  mysql:
+    image:  mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: test
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+
+
+
+  ## Mongo Docker Compose Config for Order and Product services
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    expose:
+      - "27017"
+    volumes:
+      - ./mongo-data:/data/db
+
+
+
+
+
+
+
+volumes:
+  mysql-data:
+  mongo-data:
