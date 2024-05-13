@@ -19,6 +19,22 @@ mvn clean install
 #### Sample Feed File
 [MOCK_DATA.csv](src%2Fmain%2Fresources%2FMOCK_DATA.csv)
 
+#### Changing Upload Mode
+[application.yaml](src%2Fmain%2Fresources%2Fapplication.yaml)<br/><br/>
+<code>
+##chose from bulk,single,singleparallel<br/>
+&nbsp;bulkupload:<br/>
+&nbsp;&nbsp;&nbsp;insert:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode: bulk
+</code>
+
+#### Run The Application
+Set the active profile to mysql/mongo.
+
+<code>
+java -jar -Dspring.profiles.active=&lt;mysql/mongo> target/bulkdb-insert-0.0.1-SNAPSHOT.jar
+</code>
+
 #### Upload Users
 <code>
 curl -F files=@src/main/resources/MOCK_DATA.csv  http://localhost:8080/user
@@ -30,14 +46,6 @@ You may upload the file multiple times to put more load on the application.
 curl -F files=@src/main/resources/MOCK_DATA.csv -F files=@src/main/resources/MOCK_DATA.csv -F files=@src/main/resources/MOCK_DATA.csv http://localhost:8080/user
 </code>
 
-#### Changing Upload Mode
-[application.yaml](src%2Fmain%2Fresources%2Fapplication.yaml)<br/><br/>
-<code>
-##chose from bulk,single, singleparallel
-bulkupload:
-  insert:
-    mode: bulk
-</code>
 
 ### MySQL
 
