@@ -9,11 +9,11 @@ spring:
     url: jdbc:mysql://localhost:3306/test
     username: root
     password: password
-#    hikari:
-#      register-beans: true
-#      minimumIdle: 2
-#      maximumPoolSize: 21
-#      max-lifetime: 600000
+    hikari:
+      register-mbeans: true
+      minimumIdle: 2
+      maximumPoolSize: 50
+      max-lifetime: 600000
 
 
 #logging:
@@ -26,4 +26,4 @@ spring:
 ##chose from bulk,single, singleparallel
 bulkupload:
   insert:
-    mode: bulk
+    mode: singleparallel

@@ -17,6 +17,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
@@ -24,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
 @Profile("mysql")
 public class UserMySqlService extends UserService {
     private final UserRepo userRepo;
-
+    private final Executor fixedThreadPool;
     @Value("${bulkupload.insert.mode:bulk}")
     private BulkUploadMode mode;
 
@@ -35,20 +37,26 @@ public class UserMySqlService extends UserService {
         try {
             response.put("File Name", multipartFile.getOriginalFilename());
             List<UserVO> userVOS = readUsersFromFile(multipartFile);
-            List<User> users = userVOS.stream().map(uvo->User.builder()
+            List<User> users = userVOS.stream().map(uvo -> User.builder()
                     .firstName(uvo.getFirstName())
                     .lastName(uvo.getLastName())
                     .email(uvo.getEmail()).build()).toList();
 
-            log.info("Upload mode: {}",mode);
+            log.info("Upload mode: {}", mode);
 
-            switch (mode){
+            switch (mode) {
                 case bulk -> userRepo.saveAll(users);
                 case single -> users.forEach(userRepo::save);
                 case singleparallel -> {
                     List<CompletableFuture<Void>> futureList = new ArrayList<>(users.size());
-                    users.forEach(user->
-                            futureList.add(CompletableFuture.runAsync(()->userRepo.save(user)))
+                    Executor cachedThreadPool = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
+                    users.forEach(user ->
+                            futureList.add(CompletableFuture
+                                    .supplyAsync(() -> "mysql")
+                                    .thenRunAsync(() -> {
+                                        log.info("User Name:{}", user.getFirstName());
+                                        userRepo.save(user);
+                                    },fixedThreadPool))
                     );
                     CompletableFuture.allOf(futureList.toArray(CompletableFuture[]::new)).join();
                 }

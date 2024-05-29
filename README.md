@@ -6,14 +6,12 @@ used in this case for parallism.
 ### Getting Started
 
 #### Running Mongo and MySQL
-<code>
-docker compose up -d
+<code>docker compose up -d
 </code>
 
 
 #### Running The Application
-<code>
-mvn clean install
+<code>mvn clean install
 </code>
 
 #### Sample Feed File
@@ -21,8 +19,7 @@ mvn clean install
 
 #### Changing Upload Mode
 [application.yaml](src%2Fmain%2Fresources%2Fapplication.yaml)<br/><br/>
-<code>
-##chose from bulk,single,singleparallel<br/>
+<code>##chose from bulk,single,singleparallel<br/>
 &nbsp;bulkupload:<br/>
 &nbsp;&nbsp;&nbsp;insert:<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode: bulk
@@ -31,19 +28,16 @@ mvn clean install
 #### Run The Application
 Set the active profile to mysql/mongo.
 
-<code>
-java -jar -Dspring.profiles.active=&lt;mysql/mongo> target/bulkdb-insert-0.0.1-SNAPSHOT.jar
+<code>java -jar -Dspring.profiles.active=&lt;mysql/mongo> target/bulkdb-insert-0.0.1-SNAPSHOT.jar
 </code>
 
 #### Upload Users
-<code>
-curl -F files=@src/main/resources/MOCK_DATA.csv  http://localhost:8080/user
+<code>curl -F files=@src/main/resources/MOCK_DATA.csv  http://localhost:8080/user
 </code>
 
 You may upload the file multiple times to put more load on the application.
 
-<code>
-curl -F files=@src/main/resources/MOCK_DATA.csv -F files=@src/main/resources/MOCK_DATA.csv -F files=@src/main/resources/MOCK_DATA.csv http://localhost:8080/user
+<code>curl -F files=@src/main/resources/MOCK_DATA.csv -F files=@src/main/resources/MOCK_DATA.csv -F files=@src/main/resources/MOCK_DATA.csv http://localhost:8080/user
 </code>
 
 
